@@ -25,12 +25,20 @@ public class IssueBookPanel extends JPanel {
 
         // TODO: Create top panel for "Enter Book and Member Details"
 
-        // TODO: Member section:
+        // TODO: Member section
         //       - Label "Member ID:"
+        memberNameLabel = new JLabel("Member ID:");
         //       - Text field for member ID
+        memberIDField = new JTextField();
         //       - "Search Member" button
+        searchMemberButton = new JButton("Search Member");
         //       - Display area showing member name (initially empty)
+        JPanel memberPanel = new JPanel();
 
+        JLabel foundmember = new JLabel(selectedMember.toString());
+
+        searchMemberButton.addActionListener(e -> searchMember());
+        memberPanel.add(foundmember);
         // TODO: Book section:
         //       - Label "Book ISBN:"
         //       - Text field for ISBN
@@ -51,31 +59,58 @@ public class IssueBookPanel extends JPanel {
 
     private void searchMember() {
         // TODO: Get member ID from field
+        String memberID =  memberIDField.getText();
+
         // TODO: Validate not empty
+        if(memberID.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Please enter a valid member ID");
+            return;
+        }
 
         // TODO: Call librarySystem.findMemberByID(memberID)
-
+        selectedMember = librarySystem.findMemberByID(memberID);
         // TODO: If found:
         //       - Store member
         //       - Display member name
         //       - Check if member can borrow (< 3 books, no overdue)
+        if(selectedMember.canBorrowMore(3) && selectedMember != null && selectedBook != null){
+            issueButton.setEnabled(true);
+            return;
+        }
         //       - Enable issue button if both member and book are selected
 
         // TODO: If not found:
         //       - Show "Member not found" error
+        JOptionPane.showMessageDialog(IssueBookPanel.this,"Member not found");
         //       - Clear member display
     }
 
     private void searchBook() {
         // TODO: Get ISBN from field
+        String isbn =  isbnField.getText();
         // TODO: Validate not empty
-
+        if(isbn.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter a valid member ID");
+            return;
+        }
         // TODO: Call librarySystem.findBookByISBN(isbn)
-
+        selectedBook = librarySystem.searchByISBN(isbn);
         // TODO: If found:
         //       - Store book
+        if(selectedMember != null && selectedBook != null) {
+            issueButton.setEnabled(true);
+            return;
+        }
         //       - Display book title and author
+        JOptionPane.showMessageDialog(IssueBookPanel.this,selectedBook.toString());
         //       - Check if book is available
+        if(selectedBook.isAvailable()){
+            issueButton.setEnabled(true);
+            return;
+
+        }
+        JOptionPane.showMessageDialog(IssueBookPanel.this,"Book not found");
+
         //       - Enable issue button if both member and book are selected
 
         // TODO: If not found or unavailable:
@@ -85,13 +120,20 @@ public class IssueBookPanel extends JPanel {
 
     private void issueBook() {
         // TODO: Validate both member and book are selected
-
-        // TODO: Check book availability
+        if(selectedMember != null && selectedBook != null) {
+            if(selectedBook.isAvailable() && selectedMember.canBorrowMore(3)){
+                librarySystem.issueBook(selectedMember.getMemberID(), selectedBook.getIsbn());
+                return;
+            }
+        }
+        JOptionPane.showMessageDialog(IssueBookPanel.this,"Error IssuingBook");
+        // TODO: Check book availability NO
         // TODO: Check member borrowing limit
         // TODO: Check if member has overdue books
 
         // TODO: If all checks pass:
         //       - Call librarySystem.issueBook(memberID, isbn)
+
         //       - This should return a Transaction object
 
         // TODO: If successful:

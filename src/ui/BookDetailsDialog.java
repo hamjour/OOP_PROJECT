@@ -23,23 +23,21 @@ public class BookDetailsDialog extends JDialog {
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(Utils.BG_PRIMARY);
 
-        // TODO: Add title panel (NORTH)
-        JPanel titlePanel = createTitlePanel();
-        // TODO: Add details panel (CENTER)
-        JPanel detailsPanel = createDetailsPanel();
-        // TODO: Add button panel (SOUTH)
-        JPanel btnPanel = createButtonPanel();
-
+        JPanel titlePanel = new JPanel();
+        JPanel detailsPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
+        add(titlePanel, BorderLayout.NORTH);
+        add(detailsPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private JPanel createTitlePanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.setBackground(Utils.BG_PRIMARY);
 
-        // TODO: Create title label with book title
-        String bookTitle = book.getTitle();
-        // TODO: Font: Monospace, BOLD, 20
-        // TODO: Color: TEXT_PRIMARY
+        JLabel titleLabel = new JLabel(book.getTItle());
+        titleLabel.setFont(new Font("Monospace", Font.BOLD, 20));
+        titleLabel.setForeground(Utils.TEXT_PRIMARY);
 
         return panel;
     }
@@ -50,26 +48,18 @@ public class BookDetailsDialog extends JDialog {
         panel.setBackground(Utils.BG_PRIMARY);
         panel.setBorder(Utils.addPadding(20, 30, 20, 30));
 
-        // TODO: Add book information:
-        //       - ISBN: [value]
-        //       - Title: [value]
-        //       - Author: [value]
-        //       - Total Copies: [value]
-        //       - Available Copies: [value]
-        //       - Times Borrowed: [value]
-
-        // TODO: Add availability status (large, colored)
-        //       - If available: "AVAILABLE" in green (ACCENT)
-        //       - If not: "NOT AVAILABLE" in red
+        JLabel bookDetailsLabel = new JLabel(book.toString());
+        panel.add(bookDetailsLabel);
 
         return panel;
     }
 
     private JLabel createInfoLabel(String label, String value) {
         JLabel infoLabel = new JLabel(label + " " + value);
-        // TODO: Font: Monospace, PLAIN, 14
-        // TODO: Color: TEXT_PRIMARY
-        // TODO: Alignment: LEFT
+        infoLabel.setFont(new Font("Monospace", Font.PLAIN, 14));
+        infoLabel.setForeground(Utils.TEXT_PRIMARY);
+
+        infoLabel.setHorizontalAlignment(JLabel.LEFT);
         return infoLabel;
     }
 
@@ -77,8 +67,8 @@ public class BookDetailsDialog extends JDialog {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.setBackground(Utils.BG_PRIMARY);
 
-        // TODO: Create "Close" button
-        // TODO: Add action listener: dispose()
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> dispose());
 
         return panel;
     }
