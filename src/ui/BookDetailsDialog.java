@@ -35,7 +35,7 @@ public class BookDetailsDialog extends JDialog {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panel.setBackground(Utils.BG_PRIMARY);
 
-        JLabel titleLabel = new JLabel(book.getTItle());
+        JLabel titleLabel = new JLabel(book.getTitle());
         titleLabel.setFont(new Font("Monospace", Font.BOLD, 20));
         titleLabel.setForeground(Utils.TEXT_PRIMARY);
 

@@ -228,8 +228,8 @@ public class LoginFrame extends JFrame {
                         "Login successful!\nWelcome, " + user.getUsername() + "!",
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE);
-                // DashboardFrame dashboard = new DashboardFrame(librarySystem, user);
-                // dashboard.setVisible(true);
+                 DashboardFrame dashboard = new DashboardFrame(librarySystem, user);
+                 dashboard.setVisible(true);
             });
         } else {
             showError("Invalid username or password");
