@@ -105,8 +105,8 @@ public class Member {
 
     @Override
     public String toString() {
-        return "Member Name: " + name + "\n"
-                + "MemberID: " + memberID + "\n"
+        return "Member Name: " + name + ", \n"
+                + "MemberID: " + memberID + ", \n"
                 + "Member Email: " + email;
     }
 

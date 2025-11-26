@@ -1,9 +1,9 @@
 package ui;
-
 import javax.swing.*;
 import java.awt.*;
 import core.Book;
 import core.LibrarySystem;
+import jdk.jshell.execution.Util;
 import utils.Utils;
 
 public class BookDetailsDialog extends JDialog {
@@ -23,9 +23,9 @@ public class BookDetailsDialog extends JDialog {
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(Utils.BG_PRIMARY);
 
-        JPanel titlePanel = new JPanel();
-        JPanel detailsPanel = new JPanel();
-        JPanel buttonPanel = new JPanel();
+        JPanel titlePanel = createTitlePanel();
+        JPanel detailsPanel = createDetailsPanel();
+        JPanel buttonPanel = createButtonPanel();
         add(titlePanel, BorderLayout.NORTH);
         add(detailsPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -33,7 +33,7 @@ public class BookDetailsDialog extends JDialog {
 
     private JPanel createTitlePanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.setBackground(Utils.BG_PRIMARY);
+        panel.setBackground(Utils.BG_SECONDARY);
 
         JLabel titleLabel = new JLabel(book.getTitle());
         titleLabel.setFont(new Font("Monospace", Font.BOLD, 20));
@@ -49,6 +49,7 @@ public class BookDetailsDialog extends JDialog {
         panel.setBorder(Utils.addPadding(20, 30, 20, 30));
 
         JLabel bookDetailsLabel = new JLabel(book.toString());
+        bookDetailsLabel.setForeground(Utils.TEXT_PRIMARY);
         panel.add(bookDetailsLabel);
 
         return panel;

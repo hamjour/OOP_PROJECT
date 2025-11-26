@@ -122,8 +122,8 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Title: " + title + "\n"
-                + "Author: " + author + "\n"
+        return "Title: " + title + ", \n"
+                + "Author: " + author + ", \n"
                 + "Avaliable Copies: " + availableCopies;
     }
 

@@ -168,15 +168,15 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction ID: " + transactionID + "\n"
-                + "Member Name: " + memberName + "\n"
-                + "Member ID: " + memberID + "\n"
-                + "Book Title: " + bookTitle + "\n"
-                + "Book ISBN: " + isbn + "\n"
-                + "Issue Date: " + issueDate + "\n"
-                + "Due Date: " + dueDate + "\n"
-                + "Return Date: " + returnDate + "\n"
-                + "Active: " + isActive + "\n";
+        return "Transaction ID: " + transactionID + ", \n"
+                + "Member Name: " + memberName + ", \n"
+                + "Member ID: " + memberID + ", \n"
+                + "Book Title: " + bookTitle + ", \n"
+                + "Book ISBN: " + isbn + ", \n"
+                + "Issue Date: " + issueDate + ", \n"
+                + "Due Date: " + dueDate + ", \n"
+                + "Return Date: " + returnDate + ", \n"
+                + "Active: " + isActive + ", \n";
     }
 
     @Override

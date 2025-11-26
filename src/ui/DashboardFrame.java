@@ -105,9 +105,9 @@ public class DashboardFrame extends JFrame {
         contentPanel.setBackground(Utils.BG_SECONDARY);
         // TODO: Add panels:
          contentPanel.add(new SearchBookPanel(librarySystem), "search");
-//         contentPanel.add(new IssueBookPanel(librarySystem), "issue");
-//         contentPanel.add(new ReturnBookPanel(librarySystem), "return");
-//         contentPanel.add(new MemberManagementPanel(librarySystem), "members");
+         contentPanel.add(new IssueBookPanel(librarySystem), "issue");
+         contentPanel.add(new ReturnBookPanel(librarySystem), "return");
+         contentPanel.add(new MemberManagementPanel(librarySystem), "members");
         cardLayout.show(contentPanel, "search");
     }
 
