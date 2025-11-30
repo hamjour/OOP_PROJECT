@@ -2,123 +2,180 @@ package ui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-
 import core.LibrarySystem;
 import core.User;
-import jdk.jshell.execution.Util;
+import ui.*;
 import utils.Utils;
 
+/**
+ * Main dashboard frame after login
+ */
 public class DashboardFrame extends JFrame {
+
     private LibrarySystem librarySystem;
     private User currentUser;
-
     private JPanel contentPanel;
     private CardLayout cardLayout;
 
+    /*
+     * Constructor - sets up the dashboard
+     */
     public DashboardFrame(LibrarySystem system, User user) {
         this.librarySystem = system;
         this.currentUser = user;
         setupUI();
     }
 
+    /*
+     * Set up the user interface
+     */
     private void setupUI() {
-        setTitle("Dashboard");
+        setTitle("Library Management System - Dashboard");
         setSize(1200, 800);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setVisible(true);
-
         setLayout(new BorderLayout());
 
+        // Add top panel
         JPanel topPanel = createTopPanel();
         add(topPanel, BorderLayout.NORTH);
+
+        // Add navigation panel
         JPanel navPanel = createNavigationPanel();
         add(navPanel, BorderLayout.WEST);
+
+        // Add content panel
         createContentPanel();
         add(contentPanel, BorderLayout.CENTER);
+
+        setVisible(true);
     }
 
+    /*
+     * Create top panel with user info and logout button
+     */
     private JPanel createTopPanel() {
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Utils.BG_PRIMARY);
-        topPanel.setBorder(Utils.addPadding(10, 10, 10, 10));
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Utils.BG_PRIMARY);
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel userInfoLabel = new JLabel();
-        userInfoLabel.setText(currentUser.getUsername());
-        userInfoLabel.setForeground(Utils.TEXT_PRIMARY);
-        userInfoLabel.setFont(new Font("Monospace", Font.BOLD, 14));
-        topPanel.add(userInfoLabel, BorderLayout.WEST);
+        // User info label
+        JLabel userLabel = new JLabel("Logged in as: " + currentUser.getUsername());
+        userLabel.setFont(new Font("Monospace", Font.BOLD, 14));
+        userLabel.setForeground(Utils.TEXT_PRIMARY);
 
-        JButton logoutBtn = new JButton();
+        // Logout button
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.setFont(new Font("Monospace", Font.BOLD, 14));
+        logoutButton.addActionListener(e -> handleLogout());
 
-        logoutBtn.setFont(new Font("MonoSpace", Font.BOLD, 16));
-        logoutBtn.setText("LogOut");
-        logoutBtn.setSize(25, 25);
-        logoutBtn.addActionListener(e -> handleLogout());
-        topPanel.add(logoutBtn, BorderLayout.EAST);
+        panel.add(userLabel, BorderLayout.WEST);
+        panel.add(logoutButton, BorderLayout.EAST);
 
-        return topPanel;
+        return panel;
     }
 
+    /*
+     * Create navigation panel with menu buttons
+     */
     private JPanel createNavigationPanel() {
-        JPanel navPanel = new JPanel();
-        LayoutManager layout = new BoxLayout(navPanel, BoxLayout.Y_AXIS);
-        navPanel.setLayout(layout);
-        navPanel.setBackground(Utils.BG_SECONDARY);
-        navPanel.setPreferredSize(new Dimension(200, 0));
-        navPanel.setBorder(Utils.addPadding(10, 10, 10, 10));
-        JButton searchBtn = createNavButton("Search Books", "search");
-        JButton issueBtn = createNavButton("Issue Book", "issue");
-        JButton returnBtn = createNavButton("Return Book", "return");
-        JButton manageMembersBtn = createNavButton("Manage Members", "members");
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(Utils.BG_SECONDARY);
+        panel.setPreferredSize(new Dimension(200, 0));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        navPanel.add(searchBtn);
-        navPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        navPanel.add(issueBtn);
-        navPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        navPanel.add(returnBtn);
-        navPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        navPanel.add(manageMembersBtn);
+        // Create navigation buttons
+        JButton searchButton = createNavButton("Search Books");
+        searchButton.addActionListener(e -> showPanel("search"));
 
-        return navPanel;
+        JButton issueButton = createNavButton("Issue Book");
+        issueButton.addActionListener(e -> showPanel("issue"));
+
+        JButton returnButton = createNavButton("Return Book");
+        returnButton.addActionListener(e -> showPanel("return"));
+
+        JButton membersButton = createNavButton("Manage Members");
+        membersButton.addActionListener(e -> showPanel("members"));
+
+        JButton booksButton = createNavButton("Manage Books");
+        booksButton.addActionListener(e -> showPanel("books"));
+
+        // Add buttons with spacing
+        panel.add(searchButton);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(issueButton);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(returnButton);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(membersButton);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(booksButton);
+
+        return panel;
     }
 
-    private JButton createNavButton(String text, String panelName) {
+    /*
+     * Create a navigation button
+     */
+    private JButton createNavButton(String text) {
         JButton button = new JButton(text);
         button.setMaximumSize(new Dimension(180, 40));
         button.setPreferredSize(new Dimension(180, 40));
-        button.setText(text);
-        button.setFont(new Font("Monospace", Font.PLAIN, 16));
-        button.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                cardLayout.show(contentPanel, panelName);
-            }
-        });
+        button.setFont(new Font("Monospace", Font.PLAIN, 14));
+        button.setForeground(Utils.TEXT_PRIMARY);
+        button.setBackground(Utils.BG_SECONDARY);
+        button.setFocusPainted(false);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         return button;
     }
 
+    /*
+     * Create content panel with all feature panels
+     */
     private void createContentPanel() {
         cardLayout = new CardLayout();
         contentPanel = new JPanel(cardLayout);
-        contentPanel.setBackground(Utils.BG_SECONDARY);
-        // TODO: Add panels:
-         contentPanel.add(new SearchBookPanel(librarySystem), "search");
-         contentPanel.add(new IssueBookPanel(librarySystem), "issue");
-         contentPanel.add(new ReturnBookPanel(librarySystem), "return");
-         contentPanel.add(new MemberManagementPanel(librarySystem), "members");
+        contentPanel.setBackground(Utils.BG_PRIMARY);
+
+        // Add all panels
+        contentPanel.add(new SearchBookPanel(librarySystem), "search");
+        contentPanel.add(new IssueBookPanel(librarySystem), "issue");
+        contentPanel.add(new ReturnBookPanel(librarySystem), "return");
+        contentPanel.add(new MemberManagementPanel(librarySystem), "members");
+        contentPanel.add(new BooksManagementPanel(librarySystem), "books");
+
+        // Show search panel by default
         cardLayout.show(contentPanel, "search");
     }
 
-    private void handleLogout() {
-        int option = JOptionPane.showConfirmDialog(DashboardFrame.this, "sUrE YoU WaNt To logout??",
-                "logout", JOptionPane.YES_NO_OPTION);
+    /*
+     * Show a specific panel
+     */
+    private void showPanel(String panelName) {
+        cardLayout.show(contentPanel, panelName);
+    }
 
-        if (option == JOptionPane.YES_OPTION){
-            dispose();
-            LoginFrame loginFrame = new LoginFrame(librarySystem);
-            loginFrame.setVisible(true);
+    /*
+     * Handle logout button click
+     */
+    private void handleLogout() {
+        int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to logout?",
+                "Confirm Logout",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            this.dispose();
+
+            // Open login window
+            SwingUtilities.invokeLater(() -> {
+                LoginFrame loginFrame = new LoginFrame(librarySystem);
+                loginFrame.setVisible(true);
+            });
         }
     }
 }

@@ -3,7 +3,14 @@ package core;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonSerializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonParseException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -26,7 +33,10 @@ public class DataManager {
 
     // Constructor
     public DataManager() {
-        gson = new GsonBuilder().setPrettyPrinting().create();
+        gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create();
         createDataDirectory();
     }
 
@@ -189,6 +199,22 @@ public class DataManager {
      */
     public boolean isFirstRun() {
         return !fileExists(USERS_FILE);
+    }
+    private static class LocalDateAdapter implements JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+        private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+
+        @Override
+        public JsonElement serialize(LocalDate date, java.lang.reflect.Type typeOfSrc,
+                                     com.google.gson.JsonSerializationContext context) {
+            return new JsonPrimitive(date.format(formatter)); // "yyyy-MM-dd"
+        }
+
+        @Override
+        public LocalDate deserialize(JsonElement json, java.lang.reflect.Type typeOfT,
+                                     com.google.gson.JsonDeserializationContext context)
+                throws JsonParseException {
+            return LocalDate.parse(json.getAsString(), formatter);
+        }
     }
 }
 

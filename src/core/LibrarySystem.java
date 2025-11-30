@@ -6,6 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LibrarySystem {
 
@@ -79,14 +80,20 @@ public class LibrarySystem {
      * Search books by title (case-insensitive, partial match)
      */
     public ArrayList<Book> searchByTitle(String title) {
-        return (ArrayList<Book>) books.stream().filter(book -> book.getTitle().toLowerCase(Locale.ROOT).equals(title.toLowerCase(Locale.ROOT))).toList();
+        return books.stream()
+                .filter(book -> book.getTitle().toLowerCase(Locale.ROOT)
+                        .contains(title.toLowerCase(Locale.ROOT)))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
      * Search books by author (case-insensitive, partial match)
      */
     public ArrayList<Book> searchByAuthor(String author) {
-        return (ArrayList<Book>) books.stream().filter(book -> book.getAuthor().equals(author)).toList();
+        return books.stream()
+                .filter(book -> book.getAuthor().toLowerCase()
+                        .contains(author.toLowerCase()))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -195,14 +202,22 @@ public class LibrarySystem {
     /**
      * Delete a member
      */
+
     public boolean deleteMember(String memberID) {
         for (int i = 0; i < members.size(); i++) {
             if (members.get(i).getMemberID().equals(memberID)){
                 if (!members.get(i).getBorrowedBooks().isEmpty()) { // ✅ Has books
                     return false;
                 }
-                members.remove(members.get(i));
-                return dataManager.saveMembers(members);
+                Member toRemove = members.get(i);
+                members.remove(i);
+                boolean saved = dataManager.saveMembers(members);
+
+                if (!saved) {
+                    members.add(i, toRemove);
+                    return false;
+                }
+                return true;
             }
         }
         return false;
@@ -299,7 +314,9 @@ public class LibrarySystem {
      * Get all active transactions for a member
      */
     public ArrayList<Transaction> getActiveTransactions(String memberID) {
-        return (ArrayList<Transaction>) transactions.stream().filter(transaction -> transaction.getMemberID().equals(memberID) && transaction.isActive()).toList();
+        return transactions.stream()
+                .filter(transaction -> transaction.getMemberID().equals(memberID) && transaction.isActive())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -326,9 +343,9 @@ public class LibrarySystem {
      * Check if member has overdue books
      */
     public boolean hasOverdueBooks(String memberID) {
-        ArrayList<Transaction> memberTransactions = (ArrayList<Transaction>) transactions.stream()
+        ArrayList<Transaction> memberTransactions = transactions.stream()
                 .filter(transaction -> transaction.getMemberID().equals(memberID) && transaction.isActive())
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
 
         for (Transaction transaction : memberTransactions) {
             if (transaction.isOverdue()) {
@@ -394,9 +411,10 @@ public class LibrarySystem {
      * Get most borrowed books (top N)
      */
     public ArrayList<Book> getMostBorrowedBooks(int limit) {
-        ArrayList<Book> sortedBooks = books;
-        sortedBooks.sort(Comparator.comparing(Book::getTimesBorrowed));
-        return (ArrayList<Book>) sortedBooks.subList(0, limit).stream().toList();
+        return books.stream()
+                .sorted(Comparator.comparing(Book::getTimesBorrowed).reversed()) // reversed for descending order
+                .limit(limit)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     // ==================== HELPER METHODS ====================

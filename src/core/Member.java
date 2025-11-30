@@ -43,6 +43,9 @@ public class Member {
 
 
     public ArrayList<String> getBorrowedBooks() {
+        if (borrowedBooks == null) {
+            borrowedBooks = new ArrayList<>();
+        }
         return borrowedBooks;
     }
 
@@ -60,7 +63,7 @@ public class Member {
     }
 
     public void setBorrowedBooks(ArrayList<String> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
+        this.borrowedBooks = new ArrayList<>(borrowedBooks);
     }
 
     // Business Logic Methods
@@ -92,6 +95,9 @@ public class Member {
     }
 
     public boolean hasAnyBorrowedBooks() {
+        if (borrowedBooks == null) {  // ⭐ THIS IS THE FIX
+            return false;
+        }
         return !borrowedBooks.isEmpty();
     }
 

@@ -7,47 +7,51 @@ import core.LibrarySystem;
 import core.User;
 import utils.Utils;
 
+/**
+ * Login screen for the library management system
+ */
 public class LoginFrame extends JFrame {
+
     private LibrarySystem librarySystem;
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
     private JButton registerButton;
 
-    private static final Color DARK_BG = Utils.PINE_TEAL;        // #344E41
-    private static final Color COMPONENT_BG = Utils.HUNTER_GREEN; // #3A5A40
-    private static final Color ACCENT = Utils.FERN;               // #588157
-    private static final Color TEXT = Utils.DUST_GREY;            // #DAD7CD
-    private static final Color TEXT_DIM = Utils.DRY_SAGE;         // #A3B18A
-
+    /*
+     * Constructor - sets up the login frame
+     */
     public LoginFrame(LibrarySystem system) {
         this.librarySystem = system;
         setupUI();
     }
 
+    /*
+     * Set up the user interface
+     */
     private void setupUI() {
         setTitle("Library Management System - Login");
         setSize(500, 600);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false);
-        getContentPane().setBackground(DARK_BG);
+        getContentPane().setBackground(Utils.BG_PRIMARY);
 
-        // Main panel
+        // Create main panel
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBackground(DARK_BG);
+        mainPanel.setBackground(Utils.BG_PRIMARY);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(100, 80, 100, 80));
 
-        // Title (optional - adds nice touch)
+        // Add title
         JLabel titleLabel = new JLabel("Library System");
         titleLabel.setFont(new Font("Monospace", Font.BOLD, 24));
-        titleLabel.setForeground(TEXT);
+        titleLabel.setForeground(Utils.TEXT_PRIMARY);
         titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        mainPanel.add(titleLabel);
-        mainPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 
         // Add components with spacing
+        mainPanel.add(titleLabel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 50)));
         mainPanel.add(createUsernamePanel());
         mainPanel.add(Box.createRigidArea(new Dimension(0, 25)));
         mainPanel.add(createPasswordPanel());
@@ -57,119 +61,147 @@ public class LoginFrame extends JFrame {
         add(mainPanel);
     }
 
+    /*
+     * Create username input panel
+     */
     private JPanel createUsernamePanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(DARK_BG);
+        panel.setBackground(Utils.BG_PRIMARY);
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        this.usernameField = createStyledTextField("enter username");
+        usernameField = new JTextField();
+        usernameField.setFont(new Font("Monospace", Font.PLAIN, 16));
+        usernameField.setForeground(Utils.TEXT_PRIMARY);
+        usernameField.setBackground(Utils.BG_PRIMARY);
+        usernameField.setCaretColor(Utils.TEXT_PRIMARY);
+        usernameField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Utils.ACCENT, 2, true),
+                BorderFactory.createEmptyBorder(10, 15, 10, 15)
+        ));
+        usernameField.setMaximumSize(new Dimension(400, 50));
+
+        // Add placeholder
+        usernameField.setText("enter username");
+        usernameField.setForeground(Utils.TEXT_SECONDARY);
+
+        usernameField.addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent e) {
+                if (usernameField.getText().equals("enter username")) {
+                    usernameField.setText("");
+                    usernameField.setForeground(Utils.TEXT_PRIMARY);
+                }
+            }
+            public void focusLost(FocusEvent e) {
+                if (usernameField.getText().isEmpty()) {
+                    usernameField.setText("enter username");
+                    usernameField.setForeground(Utils.TEXT_SECONDARY);
+                }
+            }
+        });
+
         panel.add(usernameField);
 
         return panel;
     }
 
+    /*
+     * Create password input panel
+     */
     private JPanel createPasswordPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(DARK_BG);
+        panel.setBackground(Utils.BG_PRIMARY);
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        this.passwordField = createStyledPasswordField("enter password");
-        panel.add(passwordField);
-
-        return panel;
-    }
-
-    private JTextField createStyledTextField(String placeholder) {
-        JTextField field = new JTextField();
-        field.setFont(new Font("Monospace", Font.PLAIN, 16));
-        field.setForeground(TEXT);
-        field.setBackground(DARK_BG);
-        field.setCaretColor(TEXT);
-
-        field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(ACCENT, 2, true),
+        passwordField = new JPasswordField();
+        passwordField.setFont(new Font("Monospace", Font.PLAIN, 16));
+        passwordField.setForeground(Utils.TEXT_PRIMARY);
+        passwordField.setBackground(Utils.BG_PRIMARY);
+        passwordField.setCaretColor(Utils.TEXT_PRIMARY);
+        passwordField.setEchoChar((char) 0);
+        passwordField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Utils.ACCENT, 2, true),
                 BorderFactory.createEmptyBorder(10, 15, 10, 15)
         ));
+        passwordField.setMaximumSize(new Dimension(400, 50));
 
-        field.setMaximumSize(new Dimension(400, 50));
+        // Add placeholder
+        passwordField.setText("enter password");
+        passwordField.setForeground(Utils.TEXT_SECONDARY);
 
-        // Placeholder
-        field.setText(placeholder);
-        field.setForeground(TEXT_DIM);
-
-        field.addFocusListener(new FocusAdapter() {
+        passwordField.addFocusListener(new FocusAdapter() {
             public void focusGained(FocusEvent e) {
-                if (field.getText().equals(placeholder)) {
-                    field.setText("");
-                    field.setForeground(TEXT);
+                if (new String(passwordField.getPassword()).equals("enter password")) {
+                    passwordField.setText("");
+                    passwordField.setForeground(Utils.TEXT_PRIMARY);
+                    passwordField.setEchoChar('•');
                 }
             }
             public void focusLost(FocusEvent e) {
-                if (field.getText().isEmpty()) {
-                    field.setText(placeholder);
-                    field.setForeground(TEXT_DIM);
-                }
-            }
-        });
-
-        return field;
-    }
-
-    private JPasswordField createStyledPasswordField(String placeholder) {
-        JPasswordField field = new JPasswordField();
-        field.setFont(new Font("Monospace", Font.PLAIN, 16));
-        field.setForeground(TEXT);
-        field.setBackground(DARK_BG);
-        field.setCaretColor(TEXT);
-        field.setEchoChar((char) 0); // Show characters initially for placeholder
-
-        field.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(ACCENT, 2, true),
-                BorderFactory.createEmptyBorder(10, 15, 10, 15)
-        ));
-
-        field.setMaximumSize(new Dimension(400, 50));
-
-        // Placeholder
-        field.setText(placeholder);
-        field.setForeground(TEXT_DIM);
-
-        field.addFocusListener(new FocusAdapter() {
-            public void focusGained(FocusEvent e) {
-                if (new String(field.getPassword()).equals(placeholder)) {
-                    field.setText("");
-                    field.setForeground(TEXT);
-                    field.setEchoChar('•'); // Hide password when typing
-                }
-            }
-            public void focusLost(FocusEvent e) {
-                if (field.getPassword().length == 0) {
-                    field.setEchoChar((char) 0); // Show placeholder
-                    field.setText(placeholder);
-                    field.setForeground(TEXT_DIM);
+                if (passwordField.getPassword().length == 0) {
+                    passwordField.setEchoChar((char) 0);
+                    passwordField.setText("enter password");
+                    passwordField.setForeground(Utils.TEXT_SECONDARY);
                 }
             }
         });
 
         // Enter key triggers login
-        field.addActionListener(e -> handleLogin());
+        passwordField.addActionListener(e -> handleLogin());
 
-        return field;
+        panel.add(passwordField);
+
+        return panel;
     }
 
+    /*
+     * Create button panel with login and register buttons
+     */
     private JPanel createButtonPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 0));
-        panel.setBackground(DARK_BG);
+        panel.setBackground(Utils.BG_PRIMARY);
         panel.setMaximumSize(new Dimension(400, 50));
         panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        loginButton = createStyledButton("login");
+        loginButton = new JButton("login");
+        loginButton.setFont(new Font("Monospace", Font.PLAIN, 14));
+        loginButton.setForeground(Utils.TEXT_PRIMARY);
+        loginButton.setBackground(Utils.BG_PRIMARY);
+        loginButton.setBorderPainted(false);
+        loginButton.setFocusPainted(false);
+        loginButton.setContentAreaFilled(false);
+        loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         loginButton.addActionListener(e -> handleLogin());
 
-        registerButton = createStyledButton("register new account");
+        registerButton = new JButton("register new account");
+        registerButton.setFont(new Font("Monospace", Font.PLAIN, 14));
+        registerButton.setForeground(Utils.TEXT_PRIMARY);
+        registerButton.setBackground(Utils.BG_PRIMARY);
+        registerButton.setBorderPainted(false);
+        registerButton.setFocusPainted(false);
+        registerButton.setContentAreaFilled(false);
+        registerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         registerButton.addActionListener(e -> handleRegister());
+
+        // Add hover effects
+        loginButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                loginButton.setForeground(Utils.ACCENT);
+            }
+            public void mouseExited(MouseEvent e) {
+                loginButton.setForeground(Utils.TEXT_PRIMARY);
+            }
+        });
+
+        registerButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                registerButton.setForeground(Utils.ACCENT);
+            }
+            public void mouseExited(MouseEvent e) {
+                registerButton.setForeground(Utils.TEXT_PRIMARY);
+            }
+        });
 
         panel.add(loginButton);
         panel.add(registerButton);
@@ -177,130 +209,84 @@ public class LoginFrame extends JFrame {
         return panel;
     }
 
-    private JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Monospace", Font.PLAIN, 14));
-        button.setForeground(TEXT);
-        button.setBackground(DARK_BG);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
-        button.setContentAreaFilled(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // Hover effect
-        button.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent e) {
-                button.setForeground(ACCENT);
-            }
-            public void mouseExited(MouseEvent e) {
-                button.setForeground(TEXT);
-            }
-        });
-
-        return button;
-    }
-
+    /*
+     * Handle login button click
+     */
     private void handleLogin() {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword()).trim();
 
-        // Validate
+        // Check if fields are empty
         if (username.isEmpty() || username.equals("enter username")) {
-            showError("Please enter a username");
+            JOptionPane.showMessageDialog(this, "Please enter a username");
             return;
         }
 
         if (password.isEmpty() || password.equals("enter password")) {
-            showError("Please enter a password");
+            JOptionPane.showMessageDialog(this, "Please enter a password");
             return;
         }
 
-        // Authenticate
+        // Try to login
         User user = librarySystem.login(username, password);
 
         if (user != null) {
-            // Success
+            // Login successful
             this.dispose();
 
+            // Open dashboard
             SwingUtilities.invokeLater(() -> {
-                // TODO: Create DashboardFrame when ready
-                JOptionPane.showMessageDialog(null,
-                        "Login successful!\nWelcome, " + user.getUsername() + "!",
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
-                 DashboardFrame dashboard = new DashboardFrame(librarySystem, user);
-                 dashboard.setVisible(true);
+                DashboardFrame dashboard = new DashboardFrame(librarySystem, user);
+                dashboard.setVisible(true);
             });
         } else {
-            showError("Invalid username or password");
+            // Login failed
+            JOptionPane.showMessageDialog(this, "Invalid username or password");
+
+            // Clear password field
             passwordField.setText("");
             passwordField.setEchoChar((char) 0);
         }
     }
 
+    /*
+     * Handle register button click
+     */
     private void handleRegister() {
         String username = usernameField.getText().trim();
         String password = new String(passwordField.getPassword()).trim();
 
-        // Validate
+        // Check if fields are empty
         if (username.isEmpty() || username.equals("enter username")) {
-            showError("Please enter a username");
+            JOptionPane.showMessageDialog(this, "Please enter a username");
             return;
         }
 
         if (password.isEmpty() || password.equals("enter password")) {
-            showError("Please enter a password");
+            JOptionPane.showMessageDialog(this, "Please enter a password");
             return;
         }
 
         if (password.length() < 6) {
-            showError("Password must be at least 6 characters");
+            JOptionPane.showMessageDialog(this, "Password must be at least 6 characters");
             return;
         }
 
-        // Register (all users are admins in librarian-only system)
+        // Try to register
         boolean success = librarySystem.registerUser(username, password, "ADMIN");
 
         if (success) {
-            showSuccess("Account created successfully!\nYou can now login.");
+            JOptionPane.showMessageDialog(this, "Account created successfully!\nYou can now login.");
 
             // Clear fields
             usernameField.setText("enter username");
-            usernameField.setForeground(TEXT_DIM);
+            usernameField.setForeground(Utils.TEXT_SECONDARY);
 
             passwordField.setText("enter password");
-            passwordField.setForeground(TEXT_DIM);
+            passwordField.setForeground(Utils.TEXT_SECONDARY);
             passwordField.setEchoChar((char) 0);
         } else {
-            showError("Username already exists");
+            JOptionPane.showMessageDialog(this, "Username already exists");
         }
-    }
-
-    private void showError(String message) {
-        // Custom styled dialog
-        UIManager.put("OptionPane.background", COMPONENT_BG);
-        UIManager.put("Panel.background", COMPONENT_BG);
-        UIManager.put("OptionPane.messageForeground", TEXT);
-
-        JOptionPane.showMessageDialog(
-                this,
-                message,
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-        );
-    }
-
-    private void showSuccess(String message) {
-        // Custom styled dialog
-        UIManager.put("OptionPane.background", COMPONENT_BG);
-        UIManager.put("Panel.background", COMPONENT_BG);
-        UIManager.put("OptionPane.messageForeground", TEXT);
-
-        JOptionPane.showMessageDialog(
-                this,
-                message,
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE
-        );
     }
 }

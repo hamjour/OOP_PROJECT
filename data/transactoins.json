@@ -1,0 +1,62 @@
+[
+  {
+    "transactionID": "550e8400-e29b-41d4-a716-446655440000",
+    "memberID": "M001",
+    "memberName": "John Doe",
+    "isbn": "978-0-13-468599-1",
+    "bookTitle": "Clean Code",
+    "issueDate": "2024-11-20",
+    "dueDate": "2024-12-04",
+    "returnDate": null,
+    "fine": 0.0,
+    "isActive": true
+  },
+  {
+    "transactionID": "550e8400-e29b-41d4-a716-446655440001",
+    "memberID": "M001",
+    "memberName": "John Doe",
+    "isbn": "978-0-13-597870-3",
+    "bookTitle": "Effective Java",
+    "issueDate": "2024-11-15",
+    "dueDate": "2024-11-29",
+    "returnDate": null,
+    "fine": 0.0,
+    "isActive": true
+  },
+  {
+    "transactionID": "550e8400-e29b-41d4-a716-446655440002",
+    "memberID": "M003",
+    "memberName": "Bob Johnson",
+    "isbn": "978-0-596-52068-7",
+    "bookTitle": "JavaScript: The Good Parts",
+    "issueDate": "2024-11-10",
+    "dueDate": "2024-11-24",
+    "returnDate": null,
+    "fine": 0.0,
+    "isActive": true
+  },
+  {
+    "transactionID": "550e8400-e29b-41d4-a716-446655440003",
+    "memberID": "Abdo123",
+    "memberName": "Abdo",
+    "isbn": "978-0-13-597870-3",
+    "bookTitle": "Effective Java",
+    "issueDate": "2024-11-18",
+    "dueDate": "2024-12-02",
+    "returnDate": null,
+    "fine": 0.0,
+    "isActive": true
+  },
+  {
+    "transactionID": "550e8400-e29b-41d4-a716-446655440004",
+    "memberID": "M002",
+    "memberName": "Jane Smith",
+    "isbn": "978-0-13-235088-4",
+    "bookTitle": "Clean Architecture",
+    "issueDate": "2024-10-20",
+    "dueDate": "2024-11-03",
+    "returnDate": "2024-11-02",
+    "fine": 0.0,
+    "isActive": false
+  }
+]

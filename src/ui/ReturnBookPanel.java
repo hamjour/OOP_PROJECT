@@ -1,103 +1,254 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.List;
+
 import core.LibrarySystem;
 import core.Member;
 import core.Transaction;
-import java.util.List;
+import utils.Utils;
 
+/**
+ * Panel for returning books
+ */
 public class ReturnBookPanel extends JPanel {
+
+    private LibrarySystem librarySystem;
     private JTextField memberIDField;
     private JButton searchButton;
     private JTable borrowedBooksTable;
+    private DefaultTableModel tableModel;
     private JButton returnButton;
-    private LibrarySystem librarySystem;
     private Member selectedMember;
-    private Transaction selectedTransaction;
+    private List<Transaction> activeTransactions;
 
+    /*
+     * Constructor - sets up the panel
+     */
     public ReturnBookPanel(LibrarySystem system) {
         this.librarySystem = system;
         setupUI();
     }
 
+    /*
+     * Set up the user interface
+     */
     private void setupUI() {
         setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setBackground(Utils.BG_PRIMARY);
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // TODO: Create top panel for "Enter Book Details"
-        //       - Label "Member ID:"
-        //       - Text field for member ID
-        //       - "Search" button to find member
+        // Add top panel
+        JPanel topPanel = createTopPanel();
+        add(topPanel, BorderLayout.NORTH);
 
-        // TODO: Create center panel showing borrowed books
-        //       - Label "Books Borrowed by This Member:"
-        //       - JTable with columns:
-        //         * ISBN
-        //         * Book Title
-        //         * Issue Date
-        //         * Due Date
-        //         * Days Overdue (show 0 if not overdue)
-        //         * Fine Amount (show $0.00 if not overdue)
-        //       - Make table scrollable
-        //       - Add selection listener
+        // Add table
+        JPanel centerPanel = createCenterPanel();
+        add(centerPanel, BorderLayout.CENTER);
 
-        // TODO: Create bottom panel
-        //       - "Return Selected Book" button (disabled initially)
-        //       - Status label for messages
-
-        // TODO: Style table:
-        //       - Color code overdue rows in RED/PINK
-        //       - Normal rows in default color
+        // Add button panel
+        JPanel bottomPanel = createBottomPanel();
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
+    /*
+     * Create top panel with search
+     */
+    private JPanel createTopPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(Utils.BG_PRIMARY);
+
+        // Title
+        JLabel titleLabel = new JLabel("Return Book");
+        titleLabel.setFont(new Font("Monospace", Font.BOLD, 24));
+        titleLabel.setForeground(Utils.TEXT_PRIMARY);
+        titleLabel.setAlignmentX(LEFT_ALIGNMENT);
+
+        // Search panel
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.setBackground(Utils.BG_PRIMARY);
+        searchPanel.setAlignmentX(LEFT_ALIGNMENT);
+
+        JLabel memberLabel = new JLabel("Member ID:");
+        memberLabel.setForeground(Utils.TEXT_PRIMARY);
+
+        memberIDField = new JTextField(15);
+        memberIDField.setBackground(Utils.BG_SECONDARY);
+        memberIDField.setForeground(Utils.TEXT_PRIMARY);
+
+        searchButton = new JButton("Search");
+        searchButton.addActionListener(e -> searchMember());
+
+        searchPanel.add(memberLabel);
+        searchPanel.add(memberIDField);
+        searchPanel.add(searchButton);
+
+        panel.add(titleLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(searchPanel);
+
+        return panel;
+    }
+
+    /*
+     * Create center panel with table
+     */
+    private JPanel createCenterPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Utils.BG_PRIMARY);
+
+        // Create table
+        String[] columns = {"ISBN", "Book Title", "Issue Date", "Due Date", "Days Overdue", "Fine"};
+        tableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        borrowedBooksTable = new JTable(tableModel);
+        borrowedBooksTable.setBackground(Utils.BG_SECONDARY);
+        borrowedBooksTable.setForeground(Utils.TEXT_PRIMARY);
+        borrowedBooksTable.setSelectionBackground(Utils.ACCENT);
+        borrowedBooksTable.setSelectionForeground(Utils.TEXT_PRIMARY);
+        borrowedBooksTable.setRowHeight(25);
+        borrowedBooksTable.setFillsViewportHeight(true);
+
+        // Style table header
+        borrowedBooksTable.getTableHeader().setBackground(Utils.BG_SECONDARY);
+        borrowedBooksTable.getTableHeader().setForeground(Utils.TEXT_PRIMARY);
+
+        JScrollPane scrollPane = new JScrollPane(borrowedBooksTable);
+        scrollPane.getViewport().setBackground(Utils.BG_SECONDARY); // FIX: Set viewport background
+        scrollPane.setBorder(BorderFactory.createLineBorder(Utils.ACCENT, 1));
+
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    /*
+     * Create bottom panel with return button
+     */
+    private JPanel createBottomPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panel.setBackground(Utils.BG_PRIMARY);
+
+        returnButton = new JButton("Return Selected Book");
+        returnButton.setEnabled(false);
+        returnButton.addActionListener(e -> returnBook());
+
+        panel.add(returnButton);
+
+        return panel;
+    }
+
+    /*
+     * Search for member and load their borrowed books
+     */
     private void searchMember() {
-        // TODO: Get member ID from field
-        // TODO: Validate not empty
+        String memberID = memberIDField.getText().trim();
 
-        // TODO: Call librarySystem.findMemberByID(memberID)
+        if (memberID.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a member ID");
+            return;
+        }
 
-        // TODO: If found:
-        //       - Store member
-        //       - Get member's borrowed books (active transactions)
-        //       - Display in table with calculated fines
-        //       - Enable return button if books exist
+        selectedMember = librarySystem.findMemberByID(memberID);
 
-        // TODO: If not found:
-        //       - Show "Member not found" error
-        //       - Clear table
+        if (selectedMember == null) {
+            JOptionPane.showMessageDialog(this, "Member not found");
+            tableModel.setRowCount(0);
+            returnButton.setEnabled(false);
+            return;
+        }
+
+        loadBorrowedBooks();
     }
 
+    /*
+     * Load borrowed books for the member
+     */
     private void loadBorrowedBooks() {
-        // TODO: Get list of active transactions for member
-        // TODO: For each transaction:
-        //       - Get book details
-        //       - Calculate days overdue (if any)
-        //       - Calculate fine (e.g., $1 per day)
-        //       - Add row to table
+        // Clear table first
+        tableModel.setRowCount(0);
 
-        // TODO: Color code overdue rows
+        // Get active transactions
+        activeTransactions = librarySystem.getActiveTransactions(selectedMember.getMemberID());
+
+        // DEBUG: Print what we got
+        System.out.println("Member ID: " + selectedMember.getMemberID());
+        System.out.println("Active transactions count: " + (activeTransactions != null ? activeTransactions.size() : "NULL"));
+        System.out.println("Member borrowed books: " + selectedMember.getBorrowedBooks());
+
+        // Check if member has borrowed books
+        if (activeTransactions == null || activeTransactions.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "This member has no borrowed books");
+            returnButton.setEnabled(false);
+            return;
+        }
+
+        // Add each transaction to table
+        for (Transaction transaction : activeTransactions) {
+            long daysOverdue = transaction.getDaysOverdue();
+            double fine = librarySystem.calculateFine(transaction);
+
+            Object[] row = {
+                    transaction.getIsbn(),
+                    transaction.getBookTitle(),
+                    transaction.getIssueDate().toString(),
+                    transaction.getDueDate().toString(),
+                    daysOverdue,
+                    String.format("$%.2f", fine)
+            };
+
+            tableModel.addRow(row);
+        }
+
+        // Enable return button
+        returnButton.setEnabled(true);
     }
 
+    /*
+     * Return the selected book
+     */
     private void returnBook() {
-        // TODO: Get selected transaction from table
-        // TODO: Validate a book is selected
+        int selectedRow = borrowedBooksTable.getSelectedRow();
 
-        // TODO: Calculate final fine if overdue
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a book to return");
+            return;
+        }
 
-        // TODO: Call librarySystem.returnBook(transaction)
-        //       This should:
-        //       - Update book status (increment available copies)
-        //       - Mark transaction as complete
-        //       - Record return date and fine
+        // Get the transaction from the list
+        Transaction transaction = activeTransactions.get(selectedRow);
 
-        // TODO: If successful:
-        //       - Show success message
-        //       - If fine > 0, display fine amount
-        //       - Open ReturnReceiptDialog
-        //       - Refresh borrowed books table
+        // Return the book
+        Transaction returnedTransaction = librarySystem.returnBook(transaction.getTransactionID());
 
-        // TODO: If failed:
-        //       - Show error message
+        if (returnedTransaction != null) {
+            // Calculate fine
+            double fine = returnedTransaction.getFine();
+
+            // Show success message
+            String message = "Book returned successfully!";
+            if (fine > 0) {
+                message += "\nFine: $" + String.format("%.2f", fine);
+            }
+            JOptionPane.showMessageDialog(this, message);
+
+//            // Show receipt
+//            Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
+//            ReturnReceiptDialog dialog = new ReturnReceiptDialog(parent, returnedTransaction);
+//            dialog.setVisible(true);
+
+            // Refresh the table
+            loadBorrowedBooks();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to return book");
+        }
     }
 }

@@ -5,207 +5,238 @@ import java.awt.*;
 import core.LibrarySystem;
 import core.Member;
 import core.Book;
+import core.Transaction;
 import utils.Utils;
 
+/**
+ * Panel for issuing books to members
+ */
 public class IssueBookPanel extends JPanel {
-    private final JTextField memberIDField = new JTextField(12);
-    private final JTextField isbnField = new JTextField(12);
 
-    private final JButton searchMemberButton = new JButton("Search Member");
-    private final JButton searchBookButton = new JButton("Search Book");
-    private final JButton issueButton = new JButton("Issue Book");
-
-    private final JLabel memberInfoLabel = new JLabel(""); // shows member name / info
-    private final JLabel bookInfoLabel = new JLabel("");   // shows book title / info
-    private final JLabel statusLabel = new JLabel(" ");    // shows short status messages
-
-    private final LibrarySystem librarySystem;
+    private LibrarySystem librarySystem;
+    private JTextField memberIDField;
+    private JTextField isbnField;
+    private JButton searchMemberButton;
+    private JButton searchBookButton;
+    private JButton issueButton;
+    private JLabel memberInfoLabel;
+    private JLabel bookInfoLabel;
     private Member selectedMember;
     private Book selectedBook;
 
+    /*
+     * Constructor - sets up the panel
+     */
     public IssueBookPanel(LibrarySystem system) {
         this.librarySystem = system;
-        initColors();
         setupUI();
-        wireActions();
-        updateControls();
     }
 
-    private void initColors() {
-        setBackground(Utils.BG_PRIMARY);
-        setForeground(Utils.TEXT_PRIMARY);
-
-        // Buttons and fields — prefer using Utils constants
-        searchMemberButton.setBackground(Utils.ACCENT);
-        searchMemberButton.setForeground(Utils.TEXT_PRIMARY);
-
-        searchBookButton.setBackground(Utils.ACCENT);
-        searchBookButton.setForeground(Utils.TEXT_PRIMARY);
-
-        issueButton.setBackground(Utils.BG_SECONDARY);
-        issueButton.setForeground(Utils.TEXT_PRIMARY);
-
-        memberIDField.setBackground(Utils.BG_SECONDARY);
-        memberIDField.setForeground(Utils.TEXT_PRIMARY);
-
-        isbnField.setBackground(Utils.BG_SECONDARY);
-        isbnField.setForeground(Utils.TEXT_PRIMARY);
-
-        memberInfoLabel.setForeground(Utils.TEXT_PRIMARY);
-        bookInfoLabel.setForeground(Utils.TEXT_PRIMARY);
-        statusLabel.setForeground(Utils.TEXT_SECONDARY);
-    }
-
+    /*
+     * Set up the user interface
+     */
     private void setupUI() {
-        setLayout(new BorderLayout(8, 8));
-        setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        setLayout(new BorderLayout(10, 10));
+        setBackground(Utils.BG_PRIMARY);
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Top: inputs and search buttons
-        JPanel topPanel = new JPanel(new GridLayout(2, 1, 6, 6));
-        topPanel.setOpaque(false);
-
-        JPanel memberRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 6));
-        memberRow.setOpaque(false);
-        memberRow.add(new JLabel("Member ID:") {{
-            setForeground(Utils.TEXT_PRIMARY);
-        }});
-        memberRow.add(memberIDField);
-        memberRow.add(searchMemberButton);
-        memberRow.add(memberInfoLabel);
-
-        JPanel bookRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 6));
-        bookRow.setOpaque(false);
-        bookRow.add(new JLabel("Book ISBN:") {{
-            setForeground(Utils.TEXT_PRIMARY);
-        }});
-        bookRow.add(isbnField);
-        bookRow.add(searchBookButton);
-        bookRow.add(bookInfoLabel);
-
-        topPanel.add(memberRow);
-        topPanel.add(bookRow);
+        // Add title
+        JPanel topPanel = createTopPanel();
         add(topPanel, BorderLayout.NORTH);
 
-        // Center: status message
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        centerPanel.setOpaque(false);
-        centerPanel.add(statusLabel);
+        // Add input fields
+        JPanel centerPanel = createCenterPanel();
         add(centerPanel, BorderLayout.CENTER);
 
-        // Bottom: issue button
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        bottomPanel.setOpaque(false);
-        issueButton.setPreferredSize(new Dimension(140, 36));
-        bottomPanel.add(issueButton);
+        // Add issue button
+        JPanel bottomPanel = createBottomPanel();
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    // actions
-    private void wireActions() {
-        searchMemberButton.addActionListener(e -> searchMember());
-        searchBookButton.addActionListener(e -> searchBook());
-        issueButton.addActionListener(e -> issueBook());
+    /*
+     * Create top panel with title
+     */
+    private JPanel createTopPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.setBackground(Utils.BG_PRIMARY);
+
+        JLabel titleLabel = new JLabel("Issue Book");
+        titleLabel.setFont(new Font("Monospace", Font.BOLD, 24));
+        titleLabel.setForeground(Utils.TEXT_PRIMARY);
+
+        panel.add(titleLabel);
+
+        return panel;
     }
 
-    // Search member by ID and display a simple result
+    /*
+     * Create center panel with input fields
+     */
+    private JPanel createCenterPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(Utils.BG_PRIMARY);
+
+        // Member section
+        JPanel memberPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        memberPanel.setBackground(Utils.BG_PRIMARY);
+
+        JLabel memberLabel = new JLabel("Member ID:");
+        memberLabel.setForeground(Utils.TEXT_PRIMARY);
+
+        memberIDField = new JTextField(15);
+        memberIDField.setBackground(Utils.BG_SECONDARY);
+        memberIDField.setForeground(Utils.TEXT_PRIMARY);
+
+        searchMemberButton = new JButton("Search Member");
+        searchMemberButton.addActionListener(e -> searchMember());
+
+        memberInfoLabel = new JLabel("");
+        memberInfoLabel.setForeground(Utils.TEXT_PRIMARY);
+
+        memberPanel.add(memberLabel);
+        memberPanel.add(memberIDField);
+        memberPanel.add(searchMemberButton);
+        memberPanel.add(memberInfoLabel);
+
+        // Book section
+        JPanel bookPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bookPanel.setBackground(Utils.BG_PRIMARY);
+
+        JLabel bookLabel = new JLabel("Book ISBN:");
+        bookLabel.setForeground(Utils.TEXT_PRIMARY);
+
+        isbnField = new JTextField(15);
+        isbnField.setBackground(Utils.BG_SECONDARY);
+        isbnField.setForeground(Utils.TEXT_PRIMARY);
+
+        searchBookButton = new JButton("Search Book");
+        searchBookButton.addActionListener(e -> searchBook());
+
+        bookInfoLabel = new JLabel("");
+        bookInfoLabel.setForeground(Utils.TEXT_PRIMARY);
+
+        bookPanel.add(bookLabel);
+        bookPanel.add(isbnField);
+        bookPanel.add(searchBookButton);
+        bookPanel.add(bookInfoLabel);
+
+        panel.add(memberPanel);
+        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+        panel.add(bookPanel);
+
+        return panel;
+    }
+
+    /*
+     * Create bottom panel with issue button
+     */
+    private JPanel createBottomPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panel.setBackground(Utils.BG_PRIMARY);
+
+        issueButton = new JButton("Issue Book");
+        issueButton.setEnabled(false);
+        issueButton.addActionListener(e -> issueBook());
+
+        panel.add(issueButton);
+
+        return panel;
+    }
+
+    /*
+     * Search for member by ID
+     */
     private void searchMember() {
         String memberID = memberIDField.getText().trim();
+
         if (memberID.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter a member ID.", "Input required", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter a member ID");
             return;
         }
 
         selectedMember = librarySystem.findMemberByID(memberID);
 
         if (selectedMember == null) {
-            memberInfoLabel.setText("");
-            statusLabel.setText("Member not found.");
-            JOptionPane.showMessageDialog(this, "Member not found.", "Not found", JOptionPane.ERROR_MESSAGE);
+            memberInfoLabel.setText("Not found");
+            JOptionPane.showMessageDialog(this, "Member not found");
         } else {
-            memberInfoLabel.setText(selectedMember.toString());
-            statusLabel.setText("Member found.");
+            memberInfoLabel.setText("Found: " + selectedMember.getName());
         }
-        updateControls();
+
+        updateIssueButton();
     }
 
-    // Search book by ISBN and display info
+    /*
+     * Search for book by ISBN
+     */
     private void searchBook() {
         String isbn = isbnField.getText().trim();
+
         if (isbn.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter an ISBN.", "Input required", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter an ISBN");
             return;
         }
 
         selectedBook = librarySystem.searchByISBN(isbn);
 
         if (selectedBook == null) {
-            bookInfoLabel.setText("");
-            statusLabel.setText("Book not found.");
-            JOptionPane.showMessageDialog(this, "Book not found.", "Not found", JOptionPane.ERROR_MESSAGE);
+            bookInfoLabel.setText("Not found");
+            JOptionPane.showMessageDialog(this, "Book not found");
         } else {
-            bookInfoLabel.setText(selectedBook.toString());
-            statusLabel.setText("Book found. Available: " + selectedBook.isAvailable());
+            bookInfoLabel.setText("Found: " + selectedBook.getTitle());
         }
-        updateControls();
+
+        updateIssueButton();
     }
 
-    // Enable/disable Issue button and show helpful status
-    private void updateControls() {
-        boolean ok = false;
-        if (selectedMember == null) {
-            statusLabel.setText("Select a member.");
-        }
-        if (selectedBook == null) {
-            statusLabel.setText(selectedMember == null ? "Select a member and a book." : "Select a book.");
-        }
-        if (selectedMember != null && selectedBook != null) {
-            boolean bookAvailable = selectedBook.isAvailable();
-            boolean memberCanBorrow = selectedMember.canBorrowMore(3);
+    /*
+     * Update issue button based on selections
+     */
+    private void updateIssueButton() {
+        boolean canIssue = false;
 
-            if (!bookAvailable) {
-                statusLabel.setText("Selected book is not available.");
-            } else if (!memberCanBorrow) {
-                statusLabel.setText("Member cannot borrow more books.");
-            } else {
-                statusLabel.setText("Ready to issue. Click Issue Book.");
-                ok = true;
+        if (selectedMember != null && selectedBook != null) {
+            if (selectedBook.isAvailable() && selectedMember.canBorrowMore(3)) {
+                canIssue = true;
             }
         }
-        issueButton.setEnabled(ok);
+
+        issueButton.setEnabled(canIssue);
     }
 
-    // Issue the book — simple flow for beginners
+    /*
+     * Issue the book to the member
+     */
     private void issueBook() {
         if (selectedMember == null || selectedBook == null) {
-            JOptionPane.showMessageDialog(this, "Select both member and book first.", "Missing data", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please select both member and book");
             return;
         }
 
-        if (!selectedBook.isAvailable()) {
-            JOptionPane.showMessageDialog(this, "Book is not available.", "Unavailable", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        Transaction transaction = librarySystem.issueBook(
+                selectedMember.getMemberID(),
+                selectedBook.getIsbn()
+        );
 
-        if (!selectedMember.canBorrowMore(3)) {
-            JOptionPane.showMessageDialog(this, "Member reached borrow limit.", "Limit reached", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        if (transaction != null) {
+            JOptionPane.showMessageDialog(this, "Book issued successfully!");
 
-        try {
-            librarySystem.issueBook(selectedMember.getMemberID(), selectedBook.getIsbn());
+            // Show receipt
+//            Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
+//            IssueReceiptDialog dialog = new IssueReceiptDialog(parent, transaction);
+//            dialog.setVisible(true);
 
-            JOptionPane.showMessageDialog(this, "Book issued successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-            selectedMember = null;
-            selectedBook = null;
+            // Clear fields
             memberIDField.setText("");
             isbnField.setText("");
             memberInfoLabel.setText("");
             bookInfoLabel.setText("");
-            statusLabel.setText("Book issued. You can search again.");
-            updateControls();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Failed to issue book: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            selectedMember = null;
+            selectedBook = null;
+            updateIssueButton();
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to issue book");
         }
     }
 }
