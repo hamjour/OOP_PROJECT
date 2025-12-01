@@ -7,9 +7,9 @@
     "bookTitle": "Clean Code",
     "issueDate": "2024-11-20",
     "dueDate": "2024-12-04",
-    "returnDate": null,
-    "fine": 0.0,
-    "isActive": true
+    "returnDate": "2025-11-30",
+    "fine": 361.0,
+    "isActive": false
   },
   {
     "transactionID": "550e8400-e29b-41d4-a716-446655440001",
@@ -19,7 +19,6 @@
     "bookTitle": "Effective Java",
     "issueDate": "2024-11-15",
     "dueDate": "2024-11-29",
-    "returnDate": null,
     "fine": 0.0,
     "isActive": true
   },
@@ -31,7 +30,6 @@
     "bookTitle": "JavaScript: The Good Parts",
     "issueDate": "2024-11-10",
     "dueDate": "2024-11-24",
-    "returnDate": null,
     "fine": 0.0,
     "isActive": true
   },
@@ -43,7 +41,6 @@
     "bookTitle": "Effective Java",
     "issueDate": "2024-11-18",
     "dueDate": "2024-12-02",
-    "returnDate": null,
     "fine": 0.0,
     "isActive": true
   },

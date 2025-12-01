@@ -1,0 +1,50 @@
+[
+  {
+    "isbn": "978-0-13-468599-1",
+    "title": "Clean Code",
+    "author": "Robert Martin",
+    "totalCopies": 5,
+    "availableCopies": 4,
+    "timesBorrowed": 12
+  },
+  {
+    "isbn": "978-0-13-235088-4",
+    "title": "Clean Architecture",
+    "author": "Robert Martin",
+    "totalCopies": 3,
+    "availableCopies": 3,
+    "timesBorrowed": 5
+  },
+  {
+    "isbn": "978-0-13-597870-3",
+    "title": "Effective Java",
+    "author": "Joshua Bloch",
+    "totalCopies": 4,
+    "availableCopies": 2,
+    "timesBorrowed": 8
+  },
+  {
+    "isbn": "978-0-596-52068-7",
+    "title": "JavaScript: The Good Parts",
+    "author": "Douglas Crockford",
+    "totalCopies": 2,
+    "availableCopies": 0,
+    "timesBorrowed": 15
+  },
+  {
+    "isbn": "978-0-321-12742-6",
+    "title": "Design Patterns",
+    "author": "Gang of Four",
+    "totalCopies": 6,
+    "availableCopies": 5,
+    "timesBorrowed": 3
+  },
+  {
+    "isbn": "123",
+    "title": "Song of ice and fire",
+    "author": "GRR",
+    "totalCopies": 1,
+    "availableCopies": 1,
+    "timesBorrowed": 0
+  }
+]
