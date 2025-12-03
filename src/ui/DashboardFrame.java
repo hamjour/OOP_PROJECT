@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import core.LibrarySystem;
 import core.User;
-import ui.*;
+import ui.panels.*;
 import utils.Utils;
 
 /**

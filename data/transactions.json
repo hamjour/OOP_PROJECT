@@ -19,8 +19,9 @@
     "bookTitle": "Effective Java",
     "issueDate": "2024-11-15",
     "dueDate": "2024-11-29",
-    "fine": 0.0,
-    "isActive": true
+    "returnDate": "2025-12-02",
+    "fine": 368.0,
+    "isActive": false
   },
   {
     "transactionID": "550e8400-e29b-41d4-a716-446655440002",
@@ -41,8 +42,9 @@
     "bookTitle": "Effective Java",
     "issueDate": "2024-11-18",
     "dueDate": "2024-12-02",
-    "fine": 0.0,
-    "isActive": true
+    "returnDate": "2025-12-02",
+    "fine": 365.0,
+    "isActive": false
   },
   {
     "transactionID": "550e8400-e29b-41d4-a716-446655440004",

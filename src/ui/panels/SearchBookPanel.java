@@ -1,4 +1,4 @@
-package ui;
+package ui.panels;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -38,6 +38,7 @@ public class SearchBookPanel extends JPanel {
     private void setupUI() {
         setLayout(new BorderLayout(10, 10));
         setBackground(Utils.BG_PRIMARY);
+        setOpaque(true);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Add title at top
@@ -118,10 +119,12 @@ public class SearchBookPanel extends JPanel {
         resultsTable.setSelectionForeground(Utils.TEXT_PRIMARY);
         resultsTable.setRowHeight(25);
         resultsTable.setFillsViewportHeight(true);
+        resultsTable.setOpaque(true);
 
         // Style table header
         resultsTable.getTableHeader().setBackground(Utils.BG_SECONDARY);
         resultsTable.getTableHeader().setForeground(Utils.TEXT_PRIMARY);
+        resultsTable.getTableHeader().setOpaque(true);
 
         // Add double-click listener
         resultsTable.addMouseListener(new MouseAdapter() {
@@ -137,6 +140,7 @@ public class SearchBookPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(resultsTable);
         scrollPane.getViewport().setBackground(Utils.BG_SECONDARY); // FIX: Set viewport background
         scrollPane.setBorder(BorderFactory.createLineBorder(Utils.ACCENT, 1));
+        scrollPane.setOpaque(true);
 
         panel.add(scrollPane, BorderLayout.CENTER);
 

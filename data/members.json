@@ -3,14 +3,6 @@
     "memberID": "M001",
     "name": "John Doe",
     "email": "john.doe@email.com",
-    "borrowedBooks": [
-      "978-0-13-597870-3"
-    ]
-  },
-  {
-    "memberID": "M002",
-    "name": "Jane Smith",
-    "email": "jane.smith@email.com",
     "borrowedBooks": []
   },
   {
@@ -19,14 +11,6 @@
     "email": "bob.johnson@email.com",
     "borrowedBooks": [
       "978-0-596-52068-7"
-    ]
-  },
-  {
-    "memberID": "Abdo123",
-    "name": "Abdo",
-    "email": "Abdo@Abdo.com",
-    "borrowedBooks": [
-      "978-0-13-597870-3"
     ]
   }
 ]

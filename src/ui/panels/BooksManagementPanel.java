@@ -1,4 +1,4 @@
-package ui;
+package ui.panels;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -36,6 +36,7 @@ public class BooksManagementPanel extends JPanel {
     private void setupUI() {
         setLayout(new BorderLayout(10, 10));
         setBackground(Utils.BG_PRIMARY);
+        setOpaque(true);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Add title
@@ -90,14 +91,17 @@ public class BooksManagementPanel extends JPanel {
         booksTable.setSelectionForeground(Utils.TEXT_PRIMARY);
         booksTable.setRowHeight(25);
         booksTable.setFillsViewportHeight(true);
+        booksTable.setOpaque(true);
 
         // Style table header
         booksTable.getTableHeader().setBackground(Utils.BG_SECONDARY);
         booksTable.getTableHeader().setForeground(Utils.TEXT_PRIMARY);
+        booksTable.getTableHeader().setOpaque(true);
 
         JScrollPane scrollPane = new JScrollPane(booksTable);
         scrollPane.getViewport().setBackground(Utils.BG_SECONDARY);
         scrollPane.setBorder(BorderFactory.createLineBorder(Utils.ACCENT, 1));
+        scrollPane.setOpaque(true);
 
         panel.add(scrollPane, BorderLayout.CENTER);
 

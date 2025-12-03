@@ -20,7 +20,7 @@
     "title": "Effective Java",
     "author": "Joshua Bloch",
     "totalCopies": 4,
-    "availableCopies": 2,
+    "availableCopies": 4,
     "timesBorrowed": 8
   },
   {
@@ -38,13 +38,5 @@
     "totalCopies": 6,
     "availableCopies": 5,
     "timesBorrowed": 3
-  },
-  {
-    "isbn": "123",
-    "title": "Song of ice and fire",
-    "author": "GRR",
-    "totalCopies": 1,
-    "availableCopies": 1,
-    "timesBorrowed": 0
   }
 ]

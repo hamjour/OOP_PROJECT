@@ -1,4 +1,4 @@
-package ui;
+package ui.panels;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -38,6 +38,7 @@ public class ReturnBookPanel extends JPanel {
     private void setupUI() {
         setLayout(new BorderLayout(10, 10));
         setBackground(Utils.BG_PRIMARY);
+        setOpaque(true);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Add top panel
@@ -116,13 +117,16 @@ public class ReturnBookPanel extends JPanel {
         borrowedBooksTable.setSelectionForeground(Utils.TEXT_PRIMARY);
         borrowedBooksTable.setRowHeight(25);
         borrowedBooksTable.setFillsViewportHeight(true);
+        borrowedBooksTable.setOpaque(true);
 
         // Style table header
         borrowedBooksTable.getTableHeader().setBackground(Utils.BG_SECONDARY);
         borrowedBooksTable.getTableHeader().setForeground(Utils.TEXT_PRIMARY);
+        borrowedBooksTable.getTableHeader().setOpaque(true);
 
         JScrollPane scrollPane = new JScrollPane(borrowedBooksTable);
-        scrollPane.getViewport().setBackground(Utils.BG_SECONDARY); // FIX: Set viewport background
+        scrollPane.getViewport().setBackground(Utils.BG_SECONDARY);
+        scrollPane.getViewport().setOpaque(true);
         scrollPane.setBorder(BorderFactory.createLineBorder(Utils.ACCENT, 1));
 
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -179,10 +183,6 @@ public class ReturnBookPanel extends JPanel {
         // Get active transactions
         activeTransactions = librarySystem.getActiveTransactions(selectedMember.getMemberID());
 
-        // DEBUG: Print what we got
-        System.out.println("Member ID: " + selectedMember.getMemberID());
-        System.out.println("Active transactions count: " + (activeTransactions != null ? activeTransactions.size() : "NULL"));
-        System.out.println("Member borrowed books: " + selectedMember.getBorrowedBooks());
 
         // Check if member has borrowed books
         if (activeTransactions == null || activeTransactions.isEmpty()) {

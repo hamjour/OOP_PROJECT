@@ -1,4 +1,4 @@
-package ui;
+package ui.panels;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -90,14 +90,17 @@ public class MemberManagementPanel extends JPanel {
         membersTable.setSelectionForeground(Utils.TEXT_PRIMARY);
         membersTable.setRowHeight(25);
         membersTable.setFillsViewportHeight(true);
+        membersTable.setOpaque(true);
 
         // Style table header
         membersTable.getTableHeader().setBackground(Utils.BG_SECONDARY);
         membersTable.getTableHeader().setForeground(Utils.TEXT_PRIMARY);
+        membersTable.getTableHeader().setOpaque(true);
 
         JScrollPane scrollPane = new JScrollPane(membersTable);
         scrollPane.getViewport().setBackground(Utils.BG_SECONDARY);
         scrollPane.setBorder(BorderFactory.createLineBorder(Utils.ACCENT, 1));
+        scrollPane.setOpaque(true);
 
         panel.add(scrollPane, BorderLayout.CENTER);
 
